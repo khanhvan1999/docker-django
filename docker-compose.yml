@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+
+  # MySQL    
+  mysql:
+    # Image mysql on DockerHub
+    image: mysql:5.7
+    # Name of container
+    container_name: mysql-django
+    # Restart when stopped
+    restart: unless-stopped
+    tty: true
+    # Config port  
+    ports: 
+        - "4306:3306"
+    # Mount the data of the local machine to server
+    volumes: 
+        - ./db_backup:/var/lib/mysql
+    # Setting environment variable
+    environment: 
+        # Database name
+        MYSQL_DATABASE: django
+        # Password for super user
+        MYSQL_ROOT_PASSWORD: root
+        # Username
+        MYSQL_USER: khanhvan
+        # Password
+        MYSQL_PASSWORD: khanhvan
+    
